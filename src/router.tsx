@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppLayout, AuthLayout } from "./layouts";
 
-import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Home from "./module/Home";
+import Login from "./module/auth/Login";
 
 const router = createBrowserRouter([
   {
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
           {
-            path: "login",
+            index: true,
             element: <Login />,
           },
         ],
