@@ -10,12 +10,29 @@ import { Input } from "@/components/ui/input";
 
 import { loginFormSchema, useLoginForm } from "./hooks";
 import { z } from "zod";
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 function Login() {
   const form = useLoginForm();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (values: z.infer<typeof loginFormSchema>) => {
-    console.log(values);
+  const handleSubmit = async (values: z.infer<typeof loginFormSchema>) => {
+    setLoading(true);
+
+    try {
+      const response = await signInWithEmailAndPassword(
+        auth,
+        values.email,
+        values.password
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,11 +42,11 @@ function Login() {
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Username" {...field} />
+                  <Input placeholder="Email" type="email" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -41,14 +58,14 @@ function Login() {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Passowrd" {...field} />
+                  <Input placeholder="Passowrd" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <Button type="submit" className="w-full">
-            Login
+            Login {loading}
           </Button>
         </form>
       </Form>
